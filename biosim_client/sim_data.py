@@ -8,11 +8,7 @@ from biosim_client.dataset import Dataset, AttributeValueTypes
 attribute_value_types = get_args(AttributeValueTypes)
 
 
-class Hdf5Attribute:
-    pass
-
-
-class SimResults:
+class SimData:
     configuration: Configuration
     run_id: str
     hdf5_file: HDF5File
