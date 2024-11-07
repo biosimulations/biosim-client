@@ -1,10 +1,10 @@
 site_name: biosim-client
-repo_url: https://github.com/jcschaff/biosim-client
+repo_url: https://github.com/biosimulations/biosim-client
 site_url: https://jcschaff.github.io/biosim-client
 site_description: This is a library to access biosimulations.org APIs.
 site_author: Jim Schaff
 edit_uri: edit/main/docs/
-repo_name: jcschaff/biosim-client
+repo_name: biosimulations/biosim-client
 copyright: Maintained by <a href="https://jcschaff.com">Florian</a>.
 
 nav:
@@ -43,7 +43,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/jcschaff/biosim-client
+      link: https://github.com/biosimulations/biosim-client
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/biosim-client
 

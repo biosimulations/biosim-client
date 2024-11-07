@@ -1,14 +1,14 @@
 # biosim-client
 
-[![Release](https://img.shields.io/github/v/release/jcschaff/biosim-client)](https://img.shields.io/github/v/release/jcschaff/biosim-client)
-[![Build status](https://img.shields.io/github/actions/workflow/status/jcschaff/biosim-client/main.yml?branch=main)](https://github.com/jcschaff/biosim-client/actions/workflows/main.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/jcschaff/biosim-client/branch/main/graph/badge.svg)](https://codecov.io/gh/jcschaff/biosim-client)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/jcschaff/biosim-client)](https://img.shields.io/github/commit-activity/m/jcschaff/biosim-client)
-[![License](https://img.shields.io/github/license/jcschaff/biosim-client)](https://img.shields.io/github/license/jcschaff/biosim-client)
+[![Release](https://img.shields.io/github/v/release/biosimulations/biosim-client)](https://img.shields.io/github/v/release/biosimulations/biosim-client)
+[![Build status](https://img.shields.io/github/actions/workflow/status/biosimulations/biosim-client/main.yml?branch=main)](https://github.com/biosimulations/biosim-client/actions/workflows/main.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/biosimulations/biosim-client/branch/main/graph/badge.svg)](https://codecov.io/gh/biosimulations/biosim-client)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/biosimulations/biosim-client)](https://img.shields.io/github/commit-activity/m/biosimulations/biosim-client)
+[![License](https://img.shields.io/github/license/biosimulations/biosim-client)](https://img.shields.io/github/license/biosimulations/biosim-client)
 
 This is a library to access biosimulations.org APIs.
 
-- **Github repository**: <https://github.com/jcschaff/biosim-client/>
+- **Github repository**: <https://github.com/biosimulations/biosim-client/>
 - **Documentation** <https://jcschaff.github.io/biosim-client/>
 
 ## Getting started with your project
@@ -19,7 +19,7 @@ First, create a repository on GitHub with the same name as this project, and the
 git init -b main
 git add .
 git commit -m "init commit"
-git remote add origin git@github.com:jcschaff/biosim-client.git
+git remote add origin git@github.com:biosimulations/biosim-client.git
 git push -u origin main
 ```
 
@@ -39,8 +39,8 @@ To enable the code coverage reports, see [here](https://fpgmaas.github.io/cookie
 ## Releasing a new version
 
 - Create an API Token on [PyPI](https://pypi.org/).
-- Add the API Token to your projects secrets with the name `PYPI_TOKEN` by visiting [this page](https://github.com/jcschaff/biosim-client/settings/secrets/actions/new).
-- Create a [new release](https://github.com/jcschaff/biosim-client/releases/new) on Github.
+- Add the API Token to your projects secrets with the name `PYPI_TOKEN` by visiting [this page](https://github.com/biosimulations/biosim-client/settings/secrets/actions/new).
+- Create a [new release](https://github.com/biosimulations/biosim-client/releases/new) on Github.
 - Create a new tag in the form `*.*.*`.
 - For more details, see [here](https://fpgmaas.github.io/cookiecutter-poetry/features/cicd/#how-to-trigger-a-release).
 
