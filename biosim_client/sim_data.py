@@ -1,9 +1,8 @@
 from typing import Optional, get_args
 
 import biosim_client.simdata_api as simdata_client
-from biosim_client.simdata_api import HDF5File, DatasetData, HDF5Dataset, Configuration, \
-    HDF5Attribute
-from biosim_client.dataset import Dataset, AttributeValueTypes
+from biosim_client.dataset import AttributeValueTypes, Dataset
+from biosim_client.simdata_api import Configuration, DatasetData, HDF5Attribute, HDF5Dataset, HDF5File
 
 attribute_value_types = get_args(AttributeValueTypes)
 
@@ -24,8 +23,13 @@ class SimData:
         return [dataset.name for group in self.hdf5_file.groups for dataset in group.datasets]
 
     def dataset_uris(self) -> list[str]:
-        return [attr.to_dict()['value'] for group in self.hdf5_file.groups for dataset in group.datasets for attr in
-                dataset.attributes if attr.to_dict()['key'] == "uri"]
+        return [
+            attr.to_dict()["value"]
+            for group in self.hdf5_file.groups
+            for dataset in group.datasets
+            for attr in dataset.attributes
+            if attr.to_dict()["key"] == "uri"
+        ]
 
     def get_dataset(self, name: str) -> Dataset:
         if name in self.datasets:
@@ -39,7 +43,7 @@ class SimData:
             for hdf5_dataset in hdf5_group.datasets:
                 if hdf5_dataset.name == name:
                     for hdf5_attribute in hdf5_dataset.attributes:
-                        if hdf5_attribute.to_dict()['key'] == "uri":
+                        if hdf5_attribute.to_dict()["key"] == "uri":
                             dataset_uri = hdf5_attribute.to_dict()["value"]
                     break
 
@@ -48,7 +52,7 @@ class SimData:
         if hdf5_dataset is None:
             raise ValueError(f"Dataset '{name}' not found")
 
-        with (simdata_client.api_client.ApiClient(self.configuration) as api_client):
+        with simdata_client.api_client.ApiClient(self.configuration) as api_client:
             api_instance = simdata_client.DefaultApi(api_client)
             dataset_data: DatasetData = api_instance.read_dataset(run_id=self.run_id, dataset_name=dataset_uri)
             dataset = Dataset.from_api(data=dataset_data, hdf5_dataset=hdf5_dataset)

@@ -1,13 +1,12 @@
 # HDF5Dataset
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**shape** | **List[int]** |  | 
-**attributes** | [**List[HDF5Attribute]**](HDF5Attribute.md) |  | 
+| Name           | Type                                        | Description | Notes |
+| -------------- | ------------------------------------------- | ----------- | ----- |
+| **name**       | **str**                                     |             |
+| **shape**      | **List[int]**                               |             |
+| **attributes** | [**List[HDF5Attribute]**](HDF5Attribute.md) |             |
 
 ## Example
 
@@ -26,6 +25,5 @@ hdf5_dataset_dict = hdf5_dataset_instance.to_dict()
 # create an instance of HDF5Dataset from a dict
 hdf5_dataset_from_dict = HDF5Dataset.from_dict(hdf5_dataset_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

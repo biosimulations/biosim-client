@@ -1,12 +1,11 @@
 # DatasetData
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**shape** | **List[int]** |  | 
-**values** | **List[float]** |  | 
+| Name       | Type            | Description | Notes |
+| ---------- | --------------- | ----------- | ----- |
+| **shape**  | **List[int]**   |             |
+| **values** | **List[float]** |             |
 
 ## Example
 
@@ -25,6 +24,5 @@ dataset_data_dict = dataset_data_instance.to_dict()
 # create an instance of DatasetData from a dict
 dataset_data_from_dict = DatasetData.from_dict(dataset_data_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

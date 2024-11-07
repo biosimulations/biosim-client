@@ -11,4 +11,3 @@ PACKAGE="biosim_client.simdata_api"
 # TODO: improve Python typing for Mypy
 # TODO: make attributes dictionaries - easier to work with
 openapi-generator generate -i "${SPEC_DIR}/simdata.json" -g python -o "${LIB_DIR}" --additional-properties=packageName=${PACKAGE},generateSourceCodeOnly=true
-

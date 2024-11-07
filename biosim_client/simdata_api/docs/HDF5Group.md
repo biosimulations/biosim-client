@@ -1,13 +1,12 @@
 # HDF5Group
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**attributes** | [**List[HDF5Attribute]**](HDF5Attribute.md) |  | 
-**datasets** | [**List[HDF5Dataset]**](HDF5Dataset.md) |  | 
+| Name           | Type                                        | Description | Notes |
+| -------------- | ------------------------------------------- | ----------- | ----- |
+| **name**       | **str**                                     |             |
+| **attributes** | [**List[HDF5Attribute]**](HDF5Attribute.md) |             |
+| **datasets**   | [**List[HDF5Dataset]**](HDF5Dataset.md)     |             |
 
 ## Example
 
@@ -26,6 +25,5 @@ hdf5_group_dict = hdf5_group_instance.to_dict()
 # create an instance of HDF5Group from a dict
 hdf5_group_from_dict = HDF5Group.from_dict(hdf5_group_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

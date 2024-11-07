@@ -1,23 +1,22 @@
 # biosim_client.simdata_api.DefaultApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_health**](DefaultApi.md#get_health) | **GET** /health | Health
-[**get_metadata**](DefaultApi.md#get_metadata) | **GET** /datasets/{run_id}/metadata | Hdf5 File Metadata
-[**get_modified**](DefaultApi.md#get_modified) | **GET** /datasets/{run_id}/modified | Modified Datetime
-[**read_dataset**](DefaultApi.md#read_dataset) | **GET** /datasets/{run_id}/data | Read Dataset
-[**root_get**](DefaultApi.md#root_get) | **GET** / | Root
-
+| Method                                         | HTTP request                        | Description        |
+| ---------------------------------------------- | ----------------------------------- | ------------------ |
+| [**get_health**](DefaultApi.md#get_health)     | **GET** /health                     | Health             |
+| [**get_metadata**](DefaultApi.md#get_metadata) | **GET** /datasets/{run_id}/metadata | Hdf5 File Metadata |
+| [**get_modified**](DefaultApi.md#get_modified) | **GET** /datasets/{run_id}/modified | Modified Datetime  |
+| [**read_dataset**](DefaultApi.md#read_dataset) | **GET** /datasets/{run_id}/data     | Read Dataset       |
+| [**root_get**](DefaultApi.md#root_get)         | **GET** /                           | Root               |
 
 # **get_health**
+
 > StatusResponse get_health()
 
 Health
 
 ### Example
-
 
 ```python
 import biosim_client.simdata_api
@@ -46,8 +45,6 @@ with biosim_client.simdata_api.ApiClient(configuration) as api_client:
         print("Exception when calling DefaultApi->get_health: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
 This endpoint does not need any parameter.
@@ -62,24 +59,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_metadata**
+
 > HDF5File get_metadata(run_id)
 
 Hdf5 File Metadata
 
 ### Example
-
 
 ```python
 import biosim_client.simdata_api
@@ -98,7 +95,7 @@ configuration = biosim_client.simdata_api.Configuration(
 with biosim_client.simdata_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biosim_client.simdata_api.DefaultApi(api_client)
-    run_id = 'run_id_example' # str | 
+    run_id = 'run_id_example' # str |
 
     try:
         # Hdf5 File Metadata
@@ -109,14 +106,11 @@ with biosim_client.simdata_api.ApiClient(configuration) as api_client:
         print("Exception when calling DefaultApi->get_metadata: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **run_id** | **str**|  | 
+| Name       | Type    | Description | Notes |
+| ---------- | ------- | ----------- | ----- |
+| **run_id** | **str** |             |
 
 ### Return type
 
@@ -128,26 +122,26 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
-**404** | Dataset not found |  -  |
-**422** | Validation Error |  -  |
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
+| **404**     | Dataset not found   | -                |
+| **422**     | Validation Error    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_modified**
+
 > datetime get_modified(run_id)
 
 Modified Datetime
 
 ### Example
-
 
 ```python
 import biosim_client.simdata_api
@@ -165,7 +159,7 @@ configuration = biosim_client.simdata_api.Configuration(
 with biosim_client.simdata_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biosim_client.simdata_api.DefaultApi(api_client)
-    run_id = 'run_id_example' # str | 
+    run_id = 'run_id_example' # str |
 
     try:
         # Modified Datetime
@@ -176,14 +170,11 @@ with biosim_client.simdata_api.ApiClient(configuration) as api_client:
         print("Exception when calling DefaultApi->get_modified: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **run_id** | **str**|  | 
+| Name       | Type    | Description | Notes |
+| ---------- | ------- | ----------- | ----- |
+| **run_id** | **str** |             |
 
 ### Return type
 
@@ -195,26 +186,26 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
-**404** | Dataset not found |  -  |
-**422** | Validation Error |  -  |
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
+| **404**     | Dataset not found   | -                |
+| **422**     | Validation Error    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **read_dataset**
+
 > DatasetData read_dataset(run_id, dataset_name)
 
 Read Dataset
 
 ### Example
-
 
 ```python
 import biosim_client.simdata_api
@@ -233,8 +224,8 @@ configuration = biosim_client.simdata_api.Configuration(
 with biosim_client.simdata_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biosim_client.simdata_api.DefaultApi(api_client)
-    run_id = 'run_id_example' # str | 
-    dataset_name = 'dataset_name_example' # str | 
+    run_id = 'run_id_example' # str |
+    dataset_name = 'dataset_name_example' # str |
 
     try:
         # Read Dataset
@@ -245,15 +236,12 @@ with biosim_client.simdata_api.ApiClient(configuration) as api_client:
         print("Exception when calling DefaultApi->read_dataset: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **run_id** | **str**|  | 
- **dataset_name** | **str**|  | 
+| Name             | Type    | Description | Notes |
+| ---------------- | ------- | ----------- | ----- |
+| **run_id**       | **str** |             |
+| **dataset_name** | **str** |             |
 
 ### Return type
 
@@ -265,26 +253,26 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
-**404** | Dataset not found |  -  |
-**422** | Validation Error |  -  |
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
+| **404**     | Dataset not found   | -                |
+| **422**     | Validation Error    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **root_get**
+
 > object root_get()
 
 Root
 
 ### Example
-
 
 ```python
 import biosim_client.simdata_api
@@ -312,8 +300,6 @@ with biosim_client.simdata_api.ApiClient(configuration) as api_client:
         print("Exception when calling DefaultApi->root_get: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
 This endpoint does not need any parameter.
@@ -328,14 +314,13 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | Successful Response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

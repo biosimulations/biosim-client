@@ -1,11 +1,10 @@
 # StatusResponse
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**status** | [**Status**](Status.md) |  | 
+| Name       | Type                    | Description | Notes |
+| ---------- | ----------------------- | ----------- | ----- |
+| **status** | [**Status**](Status.md) |             |
 
 ## Example
 
@@ -24,6 +23,5 @@ status_response_dict = status_response_instance.to_dict()
 # create an instance of StatusResponse from a dict
 status_response_from_dict = StatusResponse.from_dict(status_response_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

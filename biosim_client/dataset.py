@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -16,11 +16,13 @@ class Dataset:
     column_names: Optional[list[str]]
     attributes: Optional[dict[str, Any]]
 
-    def __init__(self,
-                 values: list[DatasetValueTypes],
-                 shape: Optional[list[int]] = None,
-                 column_names: Optional[list[str]] = None,
-                 attributes: Optional[dict[str, Any]] = None):
+    def __init__(
+        self,
+        values: list[DatasetValueTypes],
+        shape: Optional[list[int]] = None,
+        column_names: Optional[list[str]] = None,
+        attributes: Optional[dict[str, Any]] = None,
+    ):
         if shape is None:
             shape = [len(values)]
         if attributes is None:
@@ -41,16 +43,16 @@ class Dataset:
         return dataframe
 
     @classmethod
-    def from_api(cls, data: DatasetData, hdf5_dataset: HDF5Dataset) -> 'Dataset':
-        values = data.to_dict()['values']
+    def from_api(cls, data: DatasetData, hdf5_dataset: HDF5Dataset) -> "Dataset":
+        values = data.to_dict()["values"]
         shape = hdf5_dataset.shape
 
         attributes: dict[str, Any] = {}
         column_names: Optional[list[str]] = None
         for attr in hdf5_dataset.attributes:
             attr_dict = attr.to_dict()
-            if attr_dict['key'] == 'sedmlDataSetLabels':
-                column_names = attr_dict['value']
-            attributes[attr_dict['key']] = attr_dict['value']
+            if attr_dict["key"] == "sedmlDataSetLabels":
+                column_names = attr_dict["value"]
+            attributes[attr_dict["key"]] = attr_dict["value"]
 
         return Dataset(values=values, shape=shape, column_names=column_names, attributes=attributes)
