@@ -3,8 +3,8 @@ from typing import Optional, Any
 import numpy as np
 import pandas as pd
 
-from biosim_client.api_clients.simdata.openapi_client.models.dataset_data import DatasetData
-from biosim_client.api_clients.simdata.openapi_client.models.hdf5_dataset import HDF5Dataset
+from biosim_client.simdata_api.models.dataset_data import DatasetData
+from biosim_client.simdata_api.models.hdf5_dataset import HDF5Dataset
 
 AttributeValueTypes = list[bool] | list[float] | list[int] | list[str] | bool | float | int | str
 DatasetValueTypes = float | int

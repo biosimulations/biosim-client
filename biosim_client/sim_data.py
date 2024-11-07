@@ -1,7 +1,7 @@
 from typing import Optional, get_args
 
-import biosim_client.api_clients.simdata.openapi_client as simdata_client
-from biosim_client.api_clients.simdata.openapi_client import HDF5File, DatasetData, HDF5Dataset, Configuration, \
+import biosim_client.simdata_api as simdata_client
+from biosim_client.simdata_api import HDF5File, DatasetData, HDF5Dataset, Configuration, \
     HDF5Attribute
 from biosim_client.dataset import Dataset, AttributeValueTypes
 

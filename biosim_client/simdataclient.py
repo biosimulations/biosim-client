@@ -1,6 +1,6 @@
-import biosim_client.api_clients.simdata.openapi_client as simdata_client
-from biosim_client.api_clients.simdata.openapi_client import StatusResponse, HDF5File
-from biosim_client.api_clients.simdata.openapi_client.configuration import Configuration
+import biosim_client.simdata_api as simdata_client
+from biosim_client.simdata_api import StatusResponse, HDF5File
+from biosim_client.simdata_api.configuration import Configuration
 from biosim_client.sim_data import SimData
 
 
