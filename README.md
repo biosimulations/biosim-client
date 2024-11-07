@@ -9,7 +9,7 @@
 This is a library to access biosimulations.org APIs.
 
 - **Github repository**: <https://github.com/biosimulations/biosim-client/>
-- **Documentation** <https://jcschaff.github.io/biosim-client/>
+- **Documentation** <https://biosimulations.github.io/biosim-client/>
 
 ## Getting started with your project
 
