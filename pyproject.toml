@@ -22,7 +22,7 @@ matplotlib = "^3.9.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
-pytest-cov = "^4.0.0"
+pytest-cov = "^6.0.0"
 deptry = "^0.21.0"
 mypy = "^1.5.1"
 pre-commit = "^3.4.0"
