@@ -8,6 +8,11 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/biosim-client
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -19,14 +24,15 @@ jobs:
         id: vars
         run: echo tag=${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
 
-      - name: Build and publish
+      - name: Build
         run: |
           source .venv/bin/activate
           poetry version $RELEASE_VERSION
-          make build-and-publish
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          poetry build
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
   deploy-docs:
     needs: publish
     runs-on: ubuntu-latest
