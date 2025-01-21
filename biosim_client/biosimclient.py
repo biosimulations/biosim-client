@@ -43,6 +43,7 @@ class VerifyResults:
         return self.run_verify_results.workflow_status in [
             RunsVerifyWorkflowStatus.COMPLETED,
             RunsVerifyWorkflowStatus.FAILED,
+            RunsVerifyWorkflowStatus.RUN_ID_NOT_FOUND,
         ]
 
     def get_simdata(self) -> list[SimData]:
