@@ -2,9 +2,10 @@ from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 
-from biosim_client.simdata_api.models.dataset_data import DatasetData
-from biosim_client.simdata_api.models.hdf5_dataset import HDF5Dataset
+from biosim_client.api.simdata.models.dataset_data import DatasetData
+from biosim_client.api.simdata.models.hdf5_dataset import HDF5Dataset
 
 AttributeValueTypes = list[bool] | list[float] | list[int] | list[str] | bool | float | int | str
 DatasetValueTypes = float | int
@@ -32,7 +33,7 @@ class Dataset:
         self.column_names = column_names
         self.attributes = attributes
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> NDArray[np.float64 | np.int64]:
         # print(f"in to_numpy(), len(self.values)={len(self.values)}, self.shape={self.shape}")
         return np.array(self.values).reshape(self.shape)
 
