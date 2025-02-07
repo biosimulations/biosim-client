@@ -2,16 +2,15 @@
 
 ## Properties
 
-| Name                  | Type                                                        | Description | Notes      |
-| --------------------- | ----------------------------------------------------------- | ----------- | ---------- |
-| **workflow_id**       | **str**                                                     |             |
-| **workflow_input**    | [**RunsVerifyWorkflowInput**](RunsVerifyWorkflowInput.md)   |             |
-| **workflow_status**   | [**RunsVerifyWorkflowStatus**](RunsVerifyWorkflowStatus.md) |             |
-| **timestamp**         | **str**                                                     |             |
-| **workflow_error**    | **str**                                                     |             | [optional] |
-| **actual_simulators** | [**List[BiosimSimulatorSpec]**](BiosimSimulatorSpec.md)     |             | [optional] |
-| **workflow_run_id**   | **str**                                                     |             | [optional] |
-| **workflow_results**  | [**GenerateStatisticsOutput**](GenerateStatisticsOutput.md) |             | [optional] |
+| Name                 | Type                                                                        | Description | Notes      |
+| -------------------- | --------------------------------------------------------------------------- | ----------- | ---------- |
+| **workflow_id**      | **str**                                                                     |             |
+| **compare_settings** | [**CompareSettings**](CompareSettings.md)                                   |             |
+| **workflow_status**  | [**RunsVerifyWorkflowStatus**](RunsVerifyWorkflowStatus.md)                 |             |
+| **timestamp**        | **str**                                                                     |             |
+| **workflow_run_id**  | **str**                                                                     |             | [optional] |
+| **workflow_error**   | **str**                                                                     |             | [optional] |
+| **workflow_results** | [**GenerateStatisticsActivityOutput**](GenerateStatisticsActivityOutput.md) |             | [optional] |
 
 ## Example
 

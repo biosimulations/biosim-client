@@ -16,18 +16,29 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing_extensions import Self
 
 
-class Hdf5DataValues(BaseModel):
+class CompareSettings(BaseModel):
     """
-    Hdf5DataValues
+    CompareSettings
     """
 
-    shape: List[StrictInt]
-    values: List[Union[StrictFloat, StrictInt]]
-    __properties: ClassVar[List[str]] = ["shape", "values"]
+    user_description: StrictStr
+    include_outputs: StrictBool
+    rel_tol: Union[StrictFloat, StrictInt]
+    abs_tol_min: Union[StrictFloat, StrictInt]
+    abs_tol_scale: Union[StrictFloat, StrictInt]
+    observables: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = [
+        "user_description",
+        "include_outputs",
+        "rel_tol",
+        "abs_tol_min",
+        "abs_tol_scale",
+        "observables",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -46,7 +57,7 @@ class Hdf5DataValues(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of Hdf5DataValues from a JSON string"""
+        """Create an instance of CompareSettings from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,16 +77,28 @@ class Hdf5DataValues(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if observables (nullable) is None
+        # and model_fields_set contains the field
+        if self.observables is None and "observables" in self.model_fields_set:
+            _dict["observables"] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of Hdf5DataValues from a dict"""
+        """Create an instance of CompareSettings from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({"shape": obj.get("shape"), "values": obj.get("values")})
+        _obj = cls.model_validate({
+            "user_description": obj.get("user_description"),
+            "include_outputs": obj.get("include_outputs"),
+            "rel_tol": obj.get("rel_tol"),
+            "abs_tol_min": obj.get("abs_tol_min"),
+            "abs_tol_scale": obj.get("abs_tol_scale"),
+            "observables": obj.get("observables"),
+        })
         return _obj

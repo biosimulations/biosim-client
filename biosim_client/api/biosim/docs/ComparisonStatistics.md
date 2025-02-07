@@ -8,7 +8,7 @@
 | **simulator_version_i** | **str**         |             |
 | **simulator_version_j** | **str**         |             |
 | **var_names**           | **List[str]**   |             |
-| **mse**                 | **List[float]** |             | [optional] |
+| **score**               | **List[float]** |             | [optional] |
 | **is_close**            | **List[bool]**  |             | [optional] |
 | **error_message**       | **str**         |             | [optional] |
 

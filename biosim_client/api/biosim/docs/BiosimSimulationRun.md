@@ -1,26 +1,16 @@
 # BiosimSimulationRun
 
+data returned by api.biosimulations.org/runs/{run_id}
+
 ## Properties
 
 | Name                  | Type                                                          | Description | Notes      |
 | --------------------- | ------------------------------------------------------------- | ----------- | ---------- |
 | **id**                | **str**                                                       |             |
 | **name**              | **str**                                                       |             |
-| **simulator**         | **str**                                                       |             |
-| **simulator_version** | **str**                                                       |             |
+| **simulator_version** | [**BiosimulatorVersion**](BiosimulatorVersion.md)             |             |
 | **status**            | [**BiosimSimulationRunStatus**](BiosimSimulationRunStatus.md) |             |
-| **simulator_digest**  | **str**                                                       |             | [optional] |
-| **cpus**              | **int**                                                       |             | [optional] |
-| **memory**            | **int**                                                       |             | [optional] |
-| **max_time**          | **int**                                                       |             | [optional] |
-| **env_vars**          | **List[str]**                                                 |             | [optional] |
-| **purpose**           | **str**                                                       |             | [optional] |
-| **submitted**         | **str**                                                       |             | [optional] |
-| **updated**           | **str**                                                       |             | [optional] |
-| **project_size**      | **int**                                                       |             | [optional] |
-| **results_size**      | **int**                                                       |             | [optional] |
-| **runtime**           | **int**                                                       |             | [optional] |
-| **email**             | **str**                                                       |             | [optional] |
+| **error_message**     | **str**                                                       |             | [optional] |
 
 ## Example
 
