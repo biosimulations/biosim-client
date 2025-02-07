@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from time import sleep
+from typing import TypeAlias
 
 import numpy as np
 from pydantic import BaseModel
@@ -25,7 +26,7 @@ from biosim_client.sim_data import SimData
 simdata_configuration = SimdataConfiguration(host="https://simdata.api.biosimulations.org")
 biosim_configuration = BiosimConfiguration(host="https://biosim.biosimulations.org")
 
-type NDArray3D = np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
+NDArray3D: TypeAlias = np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
 
 
 class DatasetComparison:
