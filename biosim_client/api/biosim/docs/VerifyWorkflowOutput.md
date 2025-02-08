@@ -1,4 +1,4 @@
-# RunsVerifyWorkflowOutput
+# VerifyWorkflowOutput
 
 ## Properties
 
@@ -6,7 +6,7 @@
 | -------------------- | --------------------------------------------------------------------------- | ----------- | ---------- |
 | **workflow_id**      | **str**                                                                     |             |
 | **compare_settings** | [**CompareSettings**](CompareSettings.md)                                   |             |
-| **workflow_status**  | [**RunsVerifyWorkflowStatus**](RunsVerifyWorkflowStatus.md)                 |             |
+| **workflow_status**  | [**VerifyWorkflowStatus**](VerifyWorkflowStatus.md)                         |             |
 | **timestamp**        | **str**                                                                     |             |
 | **workflow_run_id**  | **str**                                                                     |             | [optional] |
 | **workflow_error**   | **str**                                                                     |             | [optional] |
@@ -15,19 +15,19 @@
 ## Example
 
 ```python
-from biosim_client.api.biosim.models.runs_verify_workflow_output import RunsVerifyWorkflowOutput
+from biosim_client.api.biosim.models.verify_workflow_output import VerifyWorkflowOutput
 
 # TODO update the JSON string below
 json = "{}"
-# create an instance of RunsVerifyWorkflowOutput from a JSON string
-runs_verify_workflow_output_instance = RunsVerifyWorkflowOutput.from_json(json)
+# create an instance of VerifyWorkflowOutput from a JSON string
+verify_workflow_output_instance = VerifyWorkflowOutput.from_json(json)
 # print the JSON string representation of the object
-print(RunsVerifyWorkflowOutput.to_json())
+print(VerifyWorkflowOutput.to_json())
 
 # convert the object into a dict
-runs_verify_workflow_output_dict = runs_verify_workflow_output_instance.to_dict()
-# create an instance of RunsVerifyWorkflowOutput from a dict
-runs_verify_workflow_output_from_dict = RunsVerifyWorkflowOutput.from_dict(runs_verify_workflow_output_dict)
+verify_workflow_output_dict = verify_workflow_output_instance.to_dict()
+# create an instance of VerifyWorkflowOutput from a dict
+verify_workflow_output_from_dict = VerifyWorkflowOutput.from_dict(verify_workflow_output_dict)
 ```
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

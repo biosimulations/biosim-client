@@ -1,5 +1,5 @@
-from biosim_client.sim_data import SimData
-from biosim_client.simdataclient import SimdataClient
+from biosim_client.simdata.sim_data import SimData
+from biosim_client.simdata.simdata_client import SimdataClient
 
 
 def test_foo() -> None:

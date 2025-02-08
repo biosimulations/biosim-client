@@ -1,13 +1,14 @@
 [tool.poetry]
 name = "biosim_client"
-version = "0.0.2"
+version = "0.2.1"
 description = "This is a library to access biosimulations.org APIs."
 authors = ["Jim Schaff <schaff@uchc.edu>"]
 repository = "https://github.com/biosimulations/biosim-client"
 documentation = "https://jcschaff.github.io/biosim-client/"
 readme = "README.md"
 packages = [
-  {include = "biosim_client"}
+    {include = "biosim_client"},
+    {include = "tests"},
 ]
 
 [tool.poetry.dependencies]
@@ -19,6 +20,7 @@ urllib3 = "^2.2.3"
 typing-extensions = "^4.12.2"
 python-dateutil = "^2.9.0.post0"
 matplotlib = "^3.9.2"
+ipython = "^8.32.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
@@ -29,6 +31,7 @@ pre-commit = "^3.4.0"
 tox = "^4.11.1"
 types-python-dateutil = "^2.9.0.20241003"
 pandas-stubs = "^2.2.3.241009"
+sniffio = "^1.3.1"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.4.2"

@@ -1,5 +1,6 @@
 from typing import Optional, get_args
 
+from biosim_client.api.biosim.models.biosimulator_version import BiosimulatorVersion
 from biosim_client.api.simdata.api.default_api import DefaultApi as SimdataDefaultApi
 from biosim_client.api.simdata.api_client import ApiClient as SimdataApiClient
 from biosim_client.api.simdata.configuration import Configuration as SimdataConfiguration
@@ -7,7 +8,7 @@ from biosim_client.api.simdata.models.dataset_data import DatasetData
 from biosim_client.api.simdata.models.hdf5_attribute import HDF5Attribute
 from biosim_client.api.simdata.models.hdf5_dataset import HDF5Dataset
 from biosim_client.api.simdata.models.hdf5_file import HDF5File
-from biosim_client.dataset import AttributeValueTypes, Dataset
+from biosim_client.simdata.dataset import AttributeValueTypes, Dataset
 
 simdata_configuration = SimdataConfiguration(host="https://simdata.api.biosimulations.org")
 
@@ -16,12 +17,14 @@ attribute_value_types = get_args(AttributeValueTypes)
 
 class SimData:
     run_id: str
+    simulator_version: BiosimulatorVersion | None
     hdf5_file: HDF5File
     datasets: dict[str, Dataset]
 
-    def __init__(self, run_id: str, hdf5_file: HDF5File):
+    def __init__(self, run_id: str, hdf5_file: HDF5File, simulator_version: BiosimulatorVersion | None = None) -> None:
         self.run_id = run_id
         self.hdf5_file = hdf5_file
+        self.simulator_version = simulator_version
         self.datasets = {}
 
     def dataset_names(self) -> list[str]:

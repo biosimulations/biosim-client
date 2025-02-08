@@ -2,16 +2,15 @@
 
 All URIs are relative to _http://localhost_
 
-| Method                                                        | HTTP request                       | Description                                           |
-| ------------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------- |
-| [**get_verify_omex**](VerificationApi.md#get_verify_omex)     | **GET** /verify_omex/{workflow_id} | Retrieve verification report for OMEX/COMBINE archive |
-| [**get_verify_runs**](VerificationApi.md#get_verify_runs)     | **GET** /verify_runs/{workflow_id} | Get verification report for biosimulation runs        |
-| [**start_verify_omex**](VerificationApi.md#start_verify_omex) | **POST** /verify_omex              | Request verification report for OMEX/COMBINE archive  |
-| [**start_verify_runs**](VerificationApi.md#start_verify_runs) | **POST** /verify_runs              | Request verification report for biosimulation runs    |
+| Method                                                        | HTTP request                  | Description                                                            |
+| ------------------------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| [**get_verify_output**](VerificationApi.md#get_verify_output) | **GET** /verify/{workflow_id} | Retrieve verification report for OMEX/COMBINE archive                  |
+| [**verify_omex**](VerificationApi.md#verify_omex)             | **POST** /verify/omex         | Request verification report for OMEX/COMBINE archive across simulators |
+| [**verify_runs**](VerificationApi.md#verify_runs)             | **POST** /verify/runs         | Request verification report for biosimulation runs by run IDs          |
 
-# **get_verify_omex**
+# **get_verify_output**
 
-> OmexVerifyWorkflowOutput get_verify_omex(workflow_id)
+> VerifyWorkflowOutput get_verify_output(workflow_id)
 
 Retrieve verification report for OMEX/COMBINE archive
 
@@ -19,7 +18,7 @@ Retrieve verification report for OMEX/COMBINE archive
 
 ```python
 import biosim_client.api.biosim
-from biosim_client.api.biosim.models.omex_verify_workflow_output import OmexVerifyWorkflowOutput
+from biosim_client.api.biosim.models.verify_workflow_output import VerifyWorkflowOutput
 from biosim_client.api.biosim.rest import ApiException
 from pprint import pprint
 
@@ -38,11 +37,11 @@ with biosim_client.api.biosim.ApiClient(configuration) as api_client:
 
     try:
         # Retrieve verification report for OMEX/COMBINE archive
-        api_response = api_instance.get_verify_omex(workflow_id)
-        print("The response of VerificationApi->get_verify_omex:\n")
+        api_response = api_instance.get_verify_output(workflow_id)
+        print("The response of VerificationApi->get_verify_output:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling VerificationApi->get_verify_omex: %s\n" % e)
+        print("Exception when calling VerificationApi->get_verify_output: %s\n" % e)
 ```
 
 ### Parameters
@@ -53,7 +52,7 @@ with biosim_client.api.biosim.ApiClient(configuration) as api_client:
 
 ### Return type
 
-[**OmexVerifyWorkflowOutput**](OmexVerifyWorkflowOutput.md)
+[**VerifyWorkflowOutput**](VerifyWorkflowOutput.md)
 
 ### Authorization
 
@@ -73,81 +72,17 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_verify_runs**
+# **verify_omex**
 
-> RunsVerifyWorkflowOutput get_verify_runs(workflow_id)
+> VerifyWorkflowOutput verify_omex(uploaded_file, workflow_id_prefix=workflow_id_prefix, simulators=simulators, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, cache_buster=cache_buster, observables=observables)
 
-Get verification report for biosimulation runs
-
-### Example
-
-```python
-import biosim_client.api.biosim
-from biosim_client.api.biosim.models.runs_verify_workflow_output import RunsVerifyWorkflowOutput
-from biosim_client.api.biosim.rest import ApiException
-from pprint import pprint
-
-# Defining the host is optional and defaults to http://localhost
-# See configuration.py for a list of all supported configuration parameters.
-configuration = biosim_client.api.biosim.Configuration(
-    host = "http://localhost"
-)
-
-
-# Enter a context with an instance of the API client
-with biosim_client.api.biosim.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = biosim_client.api.biosim.VerificationApi(api_client)
-    workflow_id = 'workflow_id_example' # str |
-
-    try:
-        # Get verification report for biosimulation runs
-        api_response = api_instance.get_verify_runs(workflow_id)
-        print("The response of VerificationApi->get_verify_runs:\n")
-        pprint(api_response)
-    except Exception as e:
-        print("Exception when calling VerificationApi->get_verify_runs: %s\n" % e)
-```
-
-### Parameters
-
-| Name            | Type    | Description | Notes |
-| --------------- | ------- | ----------- | ----- |
-| **workflow_id** | **str** |             |
-
-### Return type
-
-[**RunsVerifyWorkflowOutput**](RunsVerifyWorkflowOutput.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description         | Response headers |
-| ----------- | ------------------- | ---------------- |
-| **200**     | Successful Response | -                |
-| **422**     | Validation Error    | -                |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **start_verify_omex**
-
-> OmexVerifyWorkflowOutput start_verify_omex(uploaded_file, workflow_id_prefix=workflow_id_prefix, simulators=simulators, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, cache_buster=cache_buster, observables=observables)
-
-Request verification report for OMEX/COMBINE archive
+Request verification report for OMEX/COMBINE archive across simulators
 
 ### Example
 
 ```python
 import biosim_client.api.biosim
-from biosim_client.api.biosim.models.omex_verify_workflow_output import OmexVerifyWorkflowOutput
+from biosim_client.api.biosim.models.verify_workflow_output import VerifyWorkflowOutput
 from biosim_client.api.biosim.rest import ApiException
 from pprint import pprint
 
@@ -174,12 +109,12 @@ with biosim_client.api.biosim.ApiClient(configuration) as api_client:
     observables = ['observables_example'] # List[str] | List of observables to include in the return data. (optional)
 
     try:
-        # Request verification report for OMEX/COMBINE archive
-        api_response = api_instance.start_verify_omex(uploaded_file, workflow_id_prefix=workflow_id_prefix, simulators=simulators, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, cache_buster=cache_buster, observables=observables)
-        print("The response of VerificationApi->start_verify_omex:\n")
+        # Request verification report for OMEX/COMBINE archive across simulators
+        api_response = api_instance.verify_omex(uploaded_file, workflow_id_prefix=workflow_id_prefix, simulators=simulators, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, cache_buster=cache_buster, observables=observables)
+        print("The response of VerificationApi->verify_omex:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling VerificationApi->start_verify_omex: %s\n" % e)
+        print("Exception when calling VerificationApi->verify_omex: %s\n" % e)
 ```
 
 ### Parameters
@@ -199,7 +134,7 @@ with biosim_client.api.biosim.ApiClient(configuration) as api_client:
 
 ### Return type
 
-[**OmexVerifyWorkflowOutput**](OmexVerifyWorkflowOutput.md)
+[**VerifyWorkflowOutput**](VerifyWorkflowOutput.md)
 
 ### Authorization
 
@@ -219,17 +154,17 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **start_verify_runs**
+# **verify_runs**
 
-> RunsVerifyWorkflowOutput start_verify_runs(workflow_id_prefix=workflow_id_prefix, biosimulations_run_ids=biosimulations_run_ids, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, observables=observables)
+> VerifyWorkflowOutput verify_runs(workflow_id_prefix=workflow_id_prefix, biosimulations_run_ids=biosimulations_run_ids, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, observables=observables)
 
-Request verification report for biosimulation runs
+Request verification report for biosimulation runs by run IDs
 
 ### Example
 
 ```python
 import biosim_client.api.biosim
-from biosim_client.api.biosim.models.runs_verify_workflow_output import RunsVerifyWorkflowOutput
+from biosim_client.api.biosim.models.verify_workflow_output import VerifyWorkflowOutput
 from biosim_client.api.biosim.rest import ApiException
 from pprint import pprint
 
@@ -254,12 +189,12 @@ with biosim_client.api.biosim.ApiClient(configuration) as api_client:
     observables = ['observables_example'] # List[str] | List of observables to include in the return data. (optional)
 
     try:
-        # Request verification report for biosimulation runs
-        api_response = api_instance.start_verify_runs(workflow_id_prefix=workflow_id_prefix, biosimulations_run_ids=biosimulations_run_ids, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, observables=observables)
-        print("The response of VerificationApi->start_verify_runs:\n")
+        # Request verification report for biosimulation runs by run IDs
+        api_response = api_instance.verify_runs(workflow_id_prefix=workflow_id_prefix, biosimulations_run_ids=biosimulations_run_ids, include_outputs=include_outputs, user_description=user_description, rel_tol=rel_tol, abs_tol_min=abs_tol_min, abs_tol_scale=abs_tol_scale, observables=observables)
+        print("The response of VerificationApi->verify_runs:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling VerificationApi->start_verify_runs: %s\n" % e)
+        print("Exception when calling VerificationApi->verify_runs: %s\n" % e)
 ```
 
 ### Parameters
@@ -277,7 +212,7 @@ with biosim_client.api.biosim.ApiClient(configuration) as api_client:
 
 ### Return type
 
-[**RunsVerifyWorkflowOutput**](RunsVerifyWorkflowOutput.md)
+[**VerifyWorkflowOutput**](VerifyWorkflowOutput.md)
 
 ### Authorization
 
