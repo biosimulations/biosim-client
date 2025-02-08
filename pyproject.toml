@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biosim_client"
-version = "0.0.2"
+version = "0.2.1"
 description = "This is a library to access biosimulations.org APIs."
 authors = ["Jim Schaff <schaff@uchc.edu>"]
 repository = "https://github.com/biosimulations/biosim-client"
