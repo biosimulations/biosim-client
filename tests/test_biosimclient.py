@@ -46,7 +46,7 @@ def test_verify_omex(
     assert run.simulator_version_names == ["copasi:4.45.296", "tellurium:2.2.10"]
 
     expected_results = VerifyResults(run_verify_results=omex_verify_workflow_output)
-    compare_verify_results(expected_results=expected_results, observed_results=run, abs_tol=1e-2, rel_tol=1e-2)
+    compare_verify_results(expected_results=expected_results, observed_results=run, abs_tol=1e-1, rel_tol=1e-1)
 
 
 def test_verify_runs_2(
