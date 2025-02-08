@@ -1,52 +1,80 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 
-from biosim_client.api.biosim.models.runs_verify_workflow_output import RunsVerifyWorkflowOutput
-from biosim_client.api.biosim.models.runs_verify_workflow_status import RunsVerifyWorkflowStatus
-from biosim_client.biosimclient import BiosimClient, DatasetComparison, NDArray3D, VerifyResults
+from biosim_client.api.biosim.models.verify_workflow_output import VerifyWorkflowOutput
+from biosim_client.api.biosim.models.verify_workflow_status import VerifyWorkflowStatus
+from biosim_client.verify.biosim_client import BiosimClient
+from biosim_client.verify.models import DatasetComparison, NDArray3D, VerifyResults
 
 
-def test_foo() -> None:
-    assert BiosimClient().get_root() == "{'docs': 'https://biosim.biosimulations.org/docs', 'version': '0.1.0'}"
+def test_api_version() -> None:
+    assert BiosimClient().get_api_version() == "0.2.0"
 
 
 def test_verify_runs_not_found() -> None:
     run_1_name = "run1"
     run_2_name = "run2"
-    run: VerifyResults = BiosimClient().compare_runs(run_ids=[run_1_name, run_2_name])
-    run.wait_for_done()
-    assert run.is_done()
-    assert run.run_verify_results.workflow_status == RunsVerifyWorkflowStatus.RUN_ID_NOT_FOUND
-    assert run.run_verify_results.workflow_error in [
-        f"Simulation run with id {run_1_name} not found.",
-        f"Simulation run with id {run_2_name} not found.",
-    ]
+    # expect the following statement to raise a ValueError with a message that the run was not found
+    with pytest.raises(ValueError) as e:
+        _run: VerifyResults = BiosimClient().compare_runs(run_ids=[run_1_name, run_2_name])
+        assert str(e.value) in [
+            f"Simulation run with id {run_1_name} not found.",
+            f"Simulation run with id {run_2_name} not found.",
+        ]
 
 
-def test_verify_runs(verify_results: VerifyResults, verify_results_path: Path) -> None:
-    run_ids = ["67817a2e1f52f47f628af971", "67817a2eba5a3f02b9f2938d"]
-    run: VerifyResults = BiosimClient().compare_runs(run_ids=run_ids)
-    run.wait_for_done()
+def test_verify_omex(
+    omex_path: Path, omex_verify_workflow_output: VerifyWorkflowOutput, omex_verify_workflow_output_path: Path
+) -> None:
+    run: VerifyResults = BiosimClient().compare_omex(
+        omex_path=omex_path, simulators=["copasi:4.45.296", "tellurium:2.2.10"]
+    )
 
     # write out run to a json file - to refresh the fixture - set refresh_fixture to True
     refresh_fixture = False
     if refresh_fixture:
-        with open(verify_results_path, "w") as f:
-            f.write(run.model_dump_json(indent=2))
+        with open(omex_verify_workflow_output_path, "w") as f:
+            f.write(run.run_verify_results.model_dump_json(indent=2))
 
-    assert run.is_done()
-    assert run.run_verify_results.workflow_status == RunsVerifyWorkflowStatus.COMPLETED
+    assert run.run_verify_results.workflow_status == VerifyWorkflowStatus.COMPLETED
     assert run.run_verify_results.workflow_error is None
     assert run.run_verify_results.workflow_results is not None
+    assert run.run_verify_results.workflow_results.sims_run_info is not None
 
-    compare_verify_results(run, verify_results)
+    assert run.simulator_version_names == ["copasi:4.45.296", "tellurium:2.2.10"]
+
+    expected_results = VerifyResults(run_verify_results=omex_verify_workflow_output)
+    compare_verify_results(expected_results=expected_results, observed_results=run, abs_tol=1e-3, rel_tol=1e-3)
 
 
-def test_verify_results(verify_results: VerifyResults) -> None:
+def test_verify_runs(runs_verify_workflow_output: VerifyWorkflowOutput, runs_verify_workflow_output_path: Path) -> None:
+    run_ids = ["67817a2e1f52f47f628af971", "67817a2eba5a3f02b9f2938d"]
+    run: VerifyResults = BiosimClient().compare_runs(run_ids=run_ids)
+
+    # write out run to a json file - to refresh the fixture - set refresh_fixture to True
+    refresh_fixture = False
+    if refresh_fixture:
+        with open(runs_verify_workflow_output_path, "w") as f:
+            f.write(run.run_verify_results.model_dump_json(indent=2))
+
+    assert run.run_verify_results.workflow_status == VerifyWorkflowStatus.COMPLETED
+    assert run.run_verify_results.workflow_error is None
+    assert run.run_verify_results.workflow_results is not None
+    assert run.run_verify_results.workflow_results.sims_run_info is not None
+
+    assert run.simulator_version_names == ["vcell:7.7.0.13", "copasi:4.45.296"]
+
+    expected_results = VerifyResults(run_verify_results=runs_verify_workflow_output)
+    compare_verify_results(expected_results=expected_results, observed_results=run, abs_tol=1e-8, rel_tol=1e-8)
+
+
+def test_verify_results(runs_verify_workflow_output: VerifyWorkflowOutput) -> None:
     # the test fixture reads this from a json file
-    assert verify_results.run_ids == ["67817a2e1f52f47f628af971", "67817a2eba5a3f02b9f2938d"]
-    assert verify_results.get_dataset_names() == [
+    run_verify_results = VerifyResults(run_verify_results=runs_verify_workflow_output)
+    assert run_verify_results.run_ids == ["67817a2e1f52f47f628af971", "67817a2eba5a3f02b9f2938d"]
+    assert run_verify_results.dataset_names == [
         "BIOMD0000000010_url.sedml/autogen_report_for_task_fig2a",
         "BIOMD0000000010_url.sedml/plot_0",
         "BIOMD0000000010_url.sedml/plot_1",
@@ -148,8 +176,8 @@ def test_verify_results(verify_results: VerifyResults) -> None:
     for dataset_name, var_names, dataset_score in dataset_results:
         print(dataset_score)
         print()
-        assert verify_results.get_var_names(dataset_name) == var_names
-        dataset_comparison = verify_results.get_dataset_comparison(dataset_name)
+        assert run_verify_results.get_var_names(dataset_name) == var_names
+        dataset_comparison = run_verify_results.get_dataset_comparison(dataset_name)
         assert dataset_comparison is not None
         # assert str(dataset_comparison.dataset_score) == str(dataset_score)
         assert dataset_comparison.dataset_score.shape == dataset_score.shape
@@ -159,25 +187,31 @@ def test_verify_results(verify_results: VerifyResults) -> None:
             a=dataset_comparison.dataset_score, b=dataset_score, atol=1e-8, rtol=1e-8, equal_nan=True
         ).all()
 
-    compare_verify_results(verify_results, verify_results)
+    compare_verify_results(
+        expected_results=run_verify_results, observed_results=run_verify_results, abs_tol=1e-8, rel_tol=1e-8
+    )
 
 
-def compare_verify_results(expected: VerifyResults, observed: VerifyResults) -> None:
-    assert expected.run_ids == observed.run_ids
-    expected_results: RunsVerifyWorkflowOutput = expected.run_verify_results
-    observed_results: RunsVerifyWorkflowOutput = observed.run_verify_results
-    assert expected_results.workflow_status == observed_results.workflow_status
-    assert expected_results.workflow_error == observed_results.workflow_error
-    assert expected_results.workflow_results is not None and observed_results.workflow_results is not None
-    assert expected_results.workflow_results.sims_run_info == observed_results.workflow_results.sims_run_info
-    assert expected_results.compare_settings == observed_results.compare_settings
+def compare_verify_results(
+    expected_results: VerifyResults, observed_results: VerifyResults, abs_tol: float, rel_tol: float
+) -> None:
+    expected: VerifyWorkflowOutput = expected_results.run_verify_results
+    observed: VerifyWorkflowOutput = observed_results.run_verify_results
+    assert expected.workflow_status == observed.workflow_status
+    assert expected.workflow_error == observed.workflow_error
+    assert expected.workflow_results is not None and observed.workflow_results is not None
+    assert expected.compare_settings == observed.compare_settings
 
     # in addition - loop over datasets and compare the processed score values to ensure they are the same
-    for dataset_name in expected.get_dataset_names():
-        expected_ds_comp: DatasetComparison | None = expected.get_dataset_comparison(dataset_name)
-        observed_ds_comp: DatasetComparison | None = observed.get_dataset_comparison(dataset_name)
+    for dataset_name in expected_results.dataset_names:
+        expected_ds_comp: DatasetComparison | None = expected_results.get_dataset_comparison(dataset_name)
+        observed_ds_comp: DatasetComparison | None = observed_results.get_dataset_comparison(dataset_name)
         assert expected_ds_comp is not None and observed_ds_comp is not None
         assert str(expected_ds_comp.dataset_score) == str(observed_ds_comp.dataset_score)
         assert np.isclose(
-            a=expected_ds_comp.dataset_score, b=observed_ds_comp.dataset_score, atol=1e-14, rtol=1e-14, equal_nan=True
+            a=expected_ds_comp.dataset_score,
+            b=observed_ds_comp.dataset_score,
+            atol=abs_tol,
+            rtol=rel_tol,
+            equal_nan=True,
         ).all()

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from biosim_client.simdataclient import SimdataClient
+from biosim_client.simdata.simdata_client import SimdataClient
 
 client = SimdataClient()
 run_id = "61fea4a08c1e3dc95a79802e"  # "649b11e033437e21669d5733"

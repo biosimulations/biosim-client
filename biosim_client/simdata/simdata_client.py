@@ -3,12 +3,14 @@ from biosim_client.api.simdata.api_client import ApiClient
 from biosim_client.api.simdata.configuration import Configuration
 from biosim_client.api.simdata.models.hdf5_file import HDF5File
 from biosim_client.api.simdata.models.status_response import StatusResponse
-from biosim_client.sim_data import SimData
+from biosim_client.simdata.sim_data import SimData
+
+simdata_configuration = Configuration(host="https://simdata.api.biosimulations.org")
 
 
 class SimdataClient:
     def __init__(self) -> None:
-        self.configuration = Configuration(host="https://simdata.api.biosimulations.org")
+        self.configuration = simdata_configuration
 
     def get_health(self) -> str:
         with ApiClient(self.configuration) as api_client:
