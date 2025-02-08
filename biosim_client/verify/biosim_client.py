@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from os import PathLike
 from pathlib import Path
 from time import sleep
 
@@ -66,7 +67,7 @@ class BiosimClient:
 
     def compare_omex(
         self,
-        omex_path: Path,
+        omex_path: PathLike[str] | str,
         simulators: list[str],
         cache_buster: str = "",
         wait_interval_s: int = 5,
@@ -82,7 +83,7 @@ class BiosimClient:
         """
         with open(omex_path, "rb") as file:
             omex_bytes = file.read()
-        filename = omex_path.name
+        filename = Path(omex_path).name
         with BiosimApiClient(biosim_configuration) as biosim_api_client:
             api_instance = VerificationApi(biosim_api_client)
             response: ApiResponse[VerifyWorkflowOutput] = api_instance.verify_omex_with_http_info(
