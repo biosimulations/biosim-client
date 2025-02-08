@@ -1,5 +1,3 @@
-::: biosim_client.simdataclient
+::: biosim_client.verify
 
-::: biosim_client.sim_data
-
-::: biosim_client.dataset
+::: biosim_client.simdata
