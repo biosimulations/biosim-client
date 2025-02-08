@@ -1,7 +1,10 @@
 from typing import TypeAlias
 
+import matplotlib.pyplot as plt
 import numpy as np
+from IPython.display import Markdown, display
 
+from biosim_client.api.biosim.models.biosim_simulation_run import BiosimSimulationRun
 from biosim_client.api.biosim.models.biosimulator_version import BiosimulatorVersion
 from biosim_client.api.biosim.models.comparison_statistics import ComparisonStatistics
 from biosim_client.api.biosim.models.generate_statistics_activity_output import GenerateStatisticsActivityOutput
@@ -107,13 +110,17 @@ class VerifyResults:
     def run_ids(self) -> list[str]:
         return [sim_run_info.biosim_sim_run.id for sim_run_info in self.workflow_results.sims_run_info]
 
+    @property
+    def runs(self) -> list[BiosimSimulationRun]:
+        return [sim_run_info.biosim_sim_run for sim_run_info in self.workflow_results.sims_run_info]
+
     def get_var_names(self, dataset_name: str) -> list[str]:
         if len(self.workflow_results.sims_run_info) == 0:
             return []
 
         # get var names from HDF5 labels attribute of dataset from first sim run
         hdf5_file: BiosimHDF5File = self.workflow_results.sims_run_info[0].hdf5_file
-        attr = extract_dataset_attr(dataset_name=dataset_name, hdf5_file=hdf5_file, attr_key="sedmlDataSetLabels")
+        attr = _extract_dataset_attr(dataset_name=dataset_name, hdf5_file=hdf5_file, attr_key="sedmlDataSetLabels")
         if attr is None:
             return []
         else:
@@ -121,9 +128,6 @@ class VerifyResults:
             return value
 
     def show_dataset_heatmaps(self) -> None:
-        import matplotlib.pyplot as plt
-        import numpy as np
-
         sim_version_names = self.simulator_version_names
         ds_names = self.dataset_names
         # Assuming 'score' and 'sim_version_names' are defined from the previous code
@@ -147,7 +151,7 @@ class VerifyResults:
             # Add solver names as labels
             axes[i].set_xticklabels(sim_version_names, rotation=45, ha="right", rotation_mode="anchor")
             axes[i].set_yticklabels(sim_version_names)
-            axes[i].set_title(f"Max Score across variables for Dataset: {dataset_name}")
+            axes[i].set_title(f"{dataset_name}")
 
             # Loop over data dimensions and create text annotations.
             for x in range(len(sim_version_names)):
@@ -175,45 +179,58 @@ class VerifyResults:
             max_score = max(max_score, np.max(score_i_j), np.max(score_j_i))
         return max_score
 
-    def get_run_comparison_clusters(self) -> list[tuple[list[str], float]]:
+    def get_run_comparison_clusters(self) -> list[tuple[list[BiosimSimulationRun], float, float]]:
         for sim_run_info in self.workflow_results.comparison_statistics:
             if sim_run_info is not None:
                 break
-        matched_run_groups: list[tuple[list[str], float]] = []
-        unmatched_runs = self.run_ids.copy()
-        max_score = 0.0
+        matched_run_groups: list[tuple[list[BiosimSimulationRun], float, float]] = []
+        unmatched_runs = self.runs.copy()
+
         while len(unmatched_runs) > 0:
-            run_id = unmatched_runs.pop(0)
-            matched_group = [run_id]
-            for other_run_id in unmatched_runs:
-                score = self._get_max_score(run_id, other_run_id)
+            # create new match group where all scores are less than 1.0
+            run = unmatched_runs.pop(0)
+            matched_group = [run]
+            max_score = 0.0
+            for other_run in self.runs:
+                if run.id == other_run.id or other_run not in unmatched_runs:
+                    continue
+                score = self._get_max_score(run.id, other_run.id)
                 if score < 1.0:
-                    matched_group.append(other_run_id)
-                    unmatched_runs.remove(other_run_id)
+                    matched_group.append(other_run)
+                    unmatched_runs.remove(other_run)
                     max_score = max(max_score, score)
-            matched_run_groups.append((matched_group, max_score))
+            # compute min score for all members of matched_group to all runs
+            min_score = np.inf
+            for i in range(len(matched_group)):
+                for j in range(i + 1, len(self.runs)):
+                    if matched_group[i].id != self.runs[j].id:
+                        min_score = min(min_score, self._get_max_score(matched_group[i].id, self.runs[j].id))
+            matched_run_groups.append((matched_group, min_score, max_score))
+
         return matched_run_groups
 
-    def show_report_to_notebook(self) -> None:
+    def show_report(self) -> None:
         # display as markdown for jupyter notebook
-        from IPython.display import Markdown, display
+        markdown_report = self._create_markdown_report()
+        display(Markdown(markdown_report))  # type: ignore
 
-        simulator_markdown = """
-        ## Simulator runs
-        """
-        for simulator_version, run_id in zip(self.simulator_versions, self.run_ids):
-            simulator_markdown += f"""\n- {simulator_version.id}:{simulator_version.version} for run [{run_id}](https://biosimulations.org/runs/{run_id})"""
-        simulator_markdown += "\n"
-        simulator_markdown += """
-        ## Simulator groups which matched each other
-        """
+    def _create_markdown_report(self) -> str:
+        simulator_markdown = ""
+        run_link_map: dict[str, str] = {
+            run.id: f"[{run.simulator_version.id}:{run.simulator_version.version}](https://biosimulations.org/runs/{run.id})"
+            for run in self.runs
+        }
         run_comparison_clusters = self.get_run_comparison_clusters()
-        for run_group, max_score in run_comparison_clusters:
-            simulator_markdown += f"""\n- Runs {run_group} matched with max score {max_score}"""
-        display(Markdown(simulator_markdown))  # type: ignore
+        for run_group, min_score, max_score in run_comparison_clusters:
+            if len(run_group) > 1:
+                run_group_links = ", ".join([run_link_map[run.id] for run in run_group])
+                simulator_markdown += f"- Group [{run_group_links}] matched (max score {max_score})\n"
+            else:
+                simulator_markdown += f"- no match for {run_link_map[run_group[0].id]} (closest score {min_score})\n"
+        return simulator_markdown
 
 
-def extract_dataset_attr(
+def _extract_dataset_attr(
     dataset_name: str, attr_key: str, hdf5_file: BiosimHDF5File | SimDataHDF5File
 ) -> BiosimHDF5Attribute | SimDataHDF5Attribute | None:
     for group in hdf5_file.groups:
