@@ -21,6 +21,7 @@ typing-extensions = "^4.12.2"
 python-dateutil = "^2.9.0.post0"
 matplotlib = "^3.9.2"
 ipython = "^8.32.0"
+pillow = "^11.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

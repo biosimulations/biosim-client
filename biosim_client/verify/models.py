@@ -1,8 +1,11 @@
+from io import BytesIO
 from typing import TypeAlias
 
 import matplotlib.pyplot as plt
 import numpy as np
+import urllib3
 from IPython.display import Markdown, display
+from PIL import Image
 
 from biosim_client.api.biosim.models.biosim_simulation_run import BiosimSimulationRun
 from biosim_client.api.biosim.models.biosimulator_version import BiosimulatorVersion
@@ -228,6 +231,54 @@ class VerifyResults:
             else:
                 simulator_markdown += f"- no match for {run_link_map[run_group[0].id]} (closest score {min_score})\n"
         return simulator_markdown
+
+    def show_saved_plots(self, max_columns: int = 3, width_in: float = 10) -> None:
+        images = []
+        image_run_ids = []
+        image_not_found_run_ids = []
+        sim_version_names = self.simulator_version_names
+        http = urllib3.PoolManager()
+        for run_id in self.run_ids:
+            image_url = f"https://storage.googleapis.com/files.biosimulations.org/simulations/{run_id}/contents/curation_image.png"
+            head_response = http.request("HEAD", image_url)
+            if head_response.status == 200:
+                response = http.request("GET", image_url)
+                image = Image.open(BytesIO(response.data))
+                image_run_ids.append(run_id)
+                images.append(image)
+            else:
+                image_not_found_run_ids.append(run_id)
+
+        if len(images) == 0:
+            display(f"no saved plots for runs {image_not_found_run_ids}")  # type: ignore
+            return
+
+        # determine number of columns and rows, start with max_columns and reduce to two columns
+        # if the number of images is not divisible by number of columns (or almost divisible by 3)
+        ncols = min(len(images), max_columns)
+        while len(images) % ncols != 0 and len(images) % ncols != (ncols - 1) and ncols > 2:
+            ncols -= 1
+        nrows = len(images) // ncols + 1
+
+        width_pixels = max([image.width for image in images]) * ncols
+        height_pixels = max([image.height for image in images]) * nrows
+        height_in = width_in * height_pixels / width_pixels
+        figsize = (width_in, height_in)
+        # fig, ax = plt.subplots(ncols=ncols, nrows=nrows, figsize=(10, 10))
+        fig, ax = plt.subplots(ncols=ncols, nrows=nrows, figsize=figsize)
+        ax = ax.flatten()
+        for i in range(nrows * ncols):
+            if i >= len(images):
+                ax[i].axis("off")
+                ax[i].set_title("")
+                ax[i].set_visible(False)
+            else:
+                ax[i].axis("off")
+                ax[i].set_title(f"{sim_version_names[i]}")
+                ax[i].imshow(images[i])
+
+        plt.tight_layout()
+        plt.show()
 
 
 def _extract_dataset_attr(
