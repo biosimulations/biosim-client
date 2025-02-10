@@ -1,11 +1,15 @@
 from io import BytesIO
 from typing import TypeAlias
+from zipfile import ZIP_DEFLATED, ZipFile
 
+import fitz  # type: ignore
 import matplotlib.pyplot as plt
 import numpy as np
+import PIL
 import urllib3
 from IPython.display import Markdown, display
-from PIL import Image
+from PIL.Image import Image
+from PIL.PngImagePlugin import PngImageFile
 
 from biosim_client.api.biosim.models.biosim_simulation_run import BiosimSimulationRun
 from biosim_client.api.biosim.models.biosimulator_version import BiosimulatorVersion
@@ -233,28 +237,37 @@ class VerifyResults:
         return simulator_markdown
 
     def show_saved_plots(self, max_columns: int = 3, width_in: float = 10) -> None:
-        images = []
+        images: list[Image] = []
         image_run_ids = []
         image_not_found_run_ids = []
         sim_version_names = self.simulator_version_names
         http = urllib3.PoolManager()
         for run_id in self.run_ids:
-            image_url = f"https://storage.googleapis.com/files.biosimulations.org/simulations/{run_id}/contents/curation_image.png"
-            head_response = http.request("HEAD", image_url)
-            if head_response.status == 200:
-                response = http.request("GET", image_url)
-                image = Image.open(BytesIO(response.data))
-                image_run_ids.append(run_id)
-                images.append(image)
-            else:
+            pdf_images: list[PngImageFile] = self._retrieve_pdf_as_image(run_id=run_id, http=http)
+            if len(pdf_images) == 0:
                 image_not_found_run_ids.append(run_id)
+            elif len(pdf_images) == 1:
+                images.append(pdf_images[0])
+                image_run_ids.append(run_id)
+            else:
+                # concatenate all images in pdf_images into a single image
+                width = max([image.width for image in pdf_images])
+                height = sum([image.height for image in pdf_images])
+                new_image = PIL.Image.new("RGB", (width, height))
+                y_offset = 0
+                for image in pdf_images:
+                    new_image.paste(image, (0, y_offset))
+                    y_offset += image.height
+                images.append(new_image)
+                # images.append(ImageFile(new_image.tobytes("png")))
+                image_run_ids.append(run_id)
 
         if len(images) == 0:
             display(f"no saved plots for runs {image_not_found_run_ids}")  # type: ignore
             return
 
         # determine number of columns and rows, start with max_columns and reduce to two columns
-        # if the number of images is not divisible by number of columns (or almost divisible by 3)
+        # until the number of images is divisible (or almost divisible) by number of columns
         ncols = min(len(images), max_columns)
         while len(images) % ncols != 0 and len(images) % ncols != (ncols - 1) and ncols > 2:
             ncols -= 1
@@ -264,7 +277,6 @@ class VerifyResults:
         height_pixels = max([image.height for image in images]) * nrows
         height_in = width_in * height_pixels / width_pixels
         figsize = (width_in, height_in)
-        # fig, ax = plt.subplots(ncols=ncols, nrows=nrows, figsize=(10, 10))
         fig, ax = plt.subplots(ncols=ncols, nrows=nrows, figsize=figsize)
         ax = ax.flatten()
         for i in range(nrows * ncols):
@@ -279,6 +291,25 @@ class VerifyResults:
 
         plt.tight_layout()
         plt.show()
+
+    def _retrieve_pdf_as_image(self, run_id: str, http: urllib3.PoolManager) -> list[PngImageFile]:
+        pdf_url = f"https://api.biosimulations.org/results/{run_id}/download"
+        images: list[PngImageFile] = []
+        head_response = http.request("HEAD", pdf_url)
+        if head_response.status == 200:
+            response = http.request("GET", pdf_url)
+            with BytesIO(response.data) as zip_buffer, ZipFile(zip_buffer, "a", ZIP_DEFLATED, False) as zip_file:
+                file_names = zip_file.namelist()
+                for file_name in file_names:
+                    if file_name.endswith(".pdf") and file_name.lower().index("plot") != -1:
+                        with zip_file.open(file_name) as pdf_file:
+                            content = pdf_file.read()
+                            with fitz.open(stream=content, filetype="pdf") as doc:
+                                for page in doc:
+                                    pix: fitz.Pixmap = page.get_pixmap()
+                                    png_content = pix.tobytes("png")
+                                    images.append(PIL.Image.open(BytesIO(png_content)))  # type: ignore
+        return images
 
 
 def _extract_dataset_attr(
