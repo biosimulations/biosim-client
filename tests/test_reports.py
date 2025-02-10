@@ -141,6 +141,36 @@ def test_run_report_4(runs_verify_workflow_output_4: VerifyWorkflowOutput, expec
     assert verify_results._create_markdown_report() == expected_run_report_4
 
 
+def test_show_saved_plots_2_1col(runs_verify_workflow_output_2: VerifyWorkflowOutput) -> None:
+    verify_results: VerifyResults = VerifyResults(run_verify_results=runs_verify_workflow_output_2)
+    verify_results.show_saved_plots(max_columns=1)
+
+
+def test_show_saved_plots_2_2col(runs_verify_workflow_output_2: VerifyWorkflowOutput) -> None:
+    verify_results: VerifyResults = VerifyResults(run_verify_results=runs_verify_workflow_output_2)
+    verify_results.show_saved_plots(max_columns=2)
+
+
+def test_show_saved_plots_4_1col(runs_verify_workflow_output_4: VerifyWorkflowOutput) -> None:
+    verify_results: VerifyResults = VerifyResults(run_verify_results=runs_verify_workflow_output_4)
+    verify_results.show_saved_plots(max_columns=1)
+
+
+def test_show_saved_plots_4_2col(runs_verify_workflow_output_4: VerifyWorkflowOutput) -> None:
+    verify_results: VerifyResults = VerifyResults(run_verify_results=runs_verify_workflow_output_4)
+    verify_results.show_saved_plots(max_columns=2)
+
+
+def test_show_saved_plots_4_3col(runs_verify_workflow_output_4: VerifyWorkflowOutput) -> None:
+    verify_results: VerifyResults = VerifyResults(run_verify_results=runs_verify_workflow_output_4)
+    verify_results.show_saved_plots(max_columns=3)
+
+
+def test_show_saved_plots_4_4col(runs_verify_workflow_output_4: VerifyWorkflowOutput) -> None:
+    verify_results: VerifyResults = VerifyResults(run_verify_results=runs_verify_workflow_output_4)
+    verify_results.show_saved_plots(max_columns=4)
+
+
 def compare_verify_results(
     expected_results: VerifyResults, observed_results: VerifyResults, abs_tol: float, rel_tol: float
 ) -> None:
