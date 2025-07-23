@@ -40,7 +40,7 @@ class Dataset:
     def to_pandas(self) -> pd.DataFrame:
         dataframe = pd.DataFrame(self.to_numpy().transpose())
         if self.column_names is not None:
-            dataframe.columns = self.column_names  # type: ignore
+            dataframe.columns = self.column_names
         return dataframe
 
     @classmethod
