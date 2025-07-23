@@ -10,7 +10,7 @@ from tests.test_reports import compare_verify_results
 
 
 def test_api_version() -> None:
-    assert BiosimClient().get_api_version() == "0.2.0"
+    assert BiosimClient().get_api_version() == "0.2.2"
 
 
 def test_verify_runs_not_found() -> None:
