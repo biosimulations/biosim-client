@@ -301,7 +301,9 @@ class VerifyResults:
             with BytesIO(response.data) as zip_buffer, ZipFile(zip_buffer, "a", ZIP_DEFLATED, False) as zip_file:
                 file_names = zip_file.namelist()
                 for file_name in file_names:
-                    if file_name.endswith(".pdf") and file_name.lower().index("plot") != -1:
+                    if file_name.endswith(".pdf") and any(
+                        word in file_name.lower() for word in ["plot", "fig", "report"]
+                    ):
                         with zip_file.open(file_name) as pdf_file:
                             content = pdf_file.read()
                             with fitz.open(stream=content, filetype="pdf") as doc:
