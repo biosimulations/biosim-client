@@ -1,0 +1,1 @@
+{"config":{"lang":["en"],"separator":"[\\s\\-]+","pipeline":["stopWordFilter"]},"docs":[{"location":"","title":"biosim-client","text":"<p>This is a library to access biosimulations.org APIs.</p>"},{"location":"modules/","title":"Modules","text":""}]}
