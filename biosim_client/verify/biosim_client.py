@@ -1,7 +1,11 @@
+import os
 from datetime import datetime, timedelta
 from os import PathLike
 from pathlib import Path
 from time import sleep
+from urllib.parse import urlparse
+
+import urllib3
 
 from biosim_client.api.biosim.api.default_api import DefaultApi as BiosimDefaultApi
 from biosim_client.api.biosim.api.verification_api import VerificationApi
@@ -67,23 +71,22 @@ class BiosimClient:
 
     def compare_omex(
         self,
-        omex_path: PathLike[str] | str,
+        omex_source: PathLike[str] | str,
         simulators: list[str],
         cache_buster: str = "",
         wait_interval_s: int = 5,
         timeout_s: timedelta = timedelta(minutes=10),
     ) -> VerifyResults:
         """
-        :param omex_path:  path to the omex file to verify against the simulators
+        :param omex_source:  path to the omex file (local path or URL) to verify against the simulators
         :param simulators:  list of simulator_name[:simulator_version] to compare simulation results
         :param cache_buster:  optional cache buster to use for the verification - unique values will force a new verification
         :param wait_interval_s:  optional interval in seconds to wait between polling for verification results
         :param timeout_s:  optional timeout in seconds to wait for verification results
         :return: VerifyResults:  The results of the verification
         """
-        with open(omex_path, "rb") as file:
-            omex_bytes = file.read()
-        filename = Path(omex_path).name
+        omex_bytes, filename = _get_omex_bytes_and_filename(omex_source)
+
         with BiosimApiClient(biosim_configuration) as biosim_api_client:
             api_instance = VerificationApi(biosim_api_client)
             response: ApiResponse[VerifyWorkflowOutput] = api_instance.verify_omex_with_http_info(
@@ -120,3 +123,27 @@ class BiosimClient:
                 raise ValueError(f"Failed to retrieve verification results: {response}")
 
             return VerifyResults(run_verify_results=verify_workflow_output)
+
+
+def _get_omex_bytes_and_filename(omex_source: str | PathLike[str]) -> tuple[bytes, str]:
+    if isinstance(omex_source, str):
+        parsed = urlparse(omex_source)
+        if parsed.scheme in ("http", "https"):
+            http = urllib3.PoolManager()
+            http_response = http.request("GET", omex_source)
+            if http_response.status != 200:
+                raise ValueError(f"Failed to download OMEX file: {http_response.status}")
+            omex_bytes = http_response.data
+            filename = Path(parsed.path).name or "downloaded.omex"
+        else:
+            with open(omex_source, "rb") as file:
+                omex_bytes = file.read()
+            filename = Path(omex_source).name
+    elif isinstance(omex_source, PathLike):
+        path_str = os.fspath(omex_source)
+        with open(path_str, "rb") as file:
+            omex_bytes = file.read()
+        filename = Path(path_str).name
+    else:
+        raise TypeError("omex_source must be a str or PathLike[str]")
+    return omex_bytes, filename
