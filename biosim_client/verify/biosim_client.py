@@ -132,7 +132,7 @@ def _get_omex_bytes_and_filename(omex_source: str | PathLike[str]) -> tuple[byte
             http = urllib3.PoolManager()
             http_response = http.request("GET", omex_source)
             if http_response.status != 200:
-                raise ValueError(f"Failed to download OMEX file: {http_response.status}")
+                raise ValueError(f"Failed to download OMEX file from {omex_source}: {http_response.status} {getattr(http_response, 'reason', '')}")
             omex_bytes = http_response.data
             filename = Path(parsed.path).name or "downloaded.omex"
         else:
