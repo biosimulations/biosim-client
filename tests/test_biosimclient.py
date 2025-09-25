@@ -1,3 +1,4 @@
+from http.server import HTTPServer
 from pathlib import Path
 
 import pytest
@@ -29,7 +30,7 @@ def test_verify_omex(
     omex_path: Path, omex_verify_workflow_output: VerifyWorkflowOutput, omex_verify_workflow_output_path: Path
 ) -> None:
     run: VerifyResults = BiosimClient().compare_omex(
-        omex_path=omex_path, simulators=["copasi:4.45.296", "tellurium:2.2.10"]
+        omex_source=omex_path, simulators=["copasi:4.45.296", "tellurium:2.2.10"]
     )
 
     # write out run to a json file - to refresh the fixture - set refresh_fixture to True
@@ -47,6 +48,29 @@ def test_verify_omex(
 
     # expected_results = VerifyResults(run_verify_results=omex_verify_workflow_output)
     # compare_verify_results(expected_results=expected_results, observed_results=run, abs_tol=1e-1, rel_tol=1e-1)
+
+
+def test_verify_omex_url(
+    httpserver: HTTPServer,
+    omex_path: Path,
+    omex_verify_workflow_output: VerifyWorkflowOutput,
+    omex_verify_workflow_output_path: Path,
+) -> None:
+    # Serve the OMEX file at a URL
+    with open(omex_path, "rb") as f:
+        omex_content = f.read()
+    httpserver.expect_request("/test.omex").respond_with_data(omex_content, content_type="application/omex")
+
+    omex_url = httpserver.url_for("/test.omex")
+    run: VerifyResults = BiosimClient().compare_omex(
+        omex_source=omex_url, simulators=["copasi:4.45.296", "tellurium:2.2.10"]
+    )
+
+    assert run.run_verify_results.workflow_status == VerifyWorkflowStatus.COMPLETED
+    assert run.run_verify_results.workflow_error is None
+    assert run.run_verify_results.workflow_results is not None
+    assert run.run_verify_results.workflow_results.sims_run_info is not None
+    assert run.simulator_version_names == ["copasi:4.45.296", "tellurium:2.2.10"]
 
 
 def test_verify_runs_2(
