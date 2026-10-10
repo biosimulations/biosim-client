@@ -4,7 +4,7 @@ name: Zenodo drift check
 # longer than that: the rollup stopped.
 on:
   schedule:
-    - cron: '0 12 * * 1'
+    - cron: "0 12 * * 1"
   workflow_dispatch: {}
 
 jobs:
