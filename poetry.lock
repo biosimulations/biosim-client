@@ -2025,18 +2025,35 @@ testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
 name = "pytest-httpserver"
-version = "1.1.3"
+version = "1.2.0"
 description = "pytest-httpserver is a httpserver for pytest"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["dev"]
+markers = "python_version == \"3.10\""
 files = [
-    {file = "pytest_httpserver-1.1.3-py3-none-any.whl", hash = "sha256:5f84757810233e19e2bb5287f3826a71c97a3740abe3a363af9155c0f82fdbb9"},
-    {file = "pytest_httpserver-1.1.3.tar.gz", hash = "sha256:af819d6b533f84b4680b9416a5b3f67f1df3701f1da54924afd4d6e4ba5917ec"},
+    {file = "pytest_httpserver-1.2.0-py3-none-any.whl", hash = "sha256:749937892dbf909c8b703503b491be66fc24073e7988bf9b4d783af4f33da942"},
+    {file = "pytest_httpserver-1.2.0.tar.gz", hash = "sha256:d07744ce2efaafa0575ed3081d416b999c773b09e84aa95065138bedc3e12352"},
 ]
 
 [package.dependencies]
-Werkzeug = ">=2.0.0"
+Werkzeug = ">=3.0.0"
+
+[[package]]
+name = "pytest-httpserver"
+version = "1.2.1"
+description = "pytest-httpserver is a httpserver for pytest"
+optional = false
+python-versions = ">=3.11"
+groups = ["dev"]
+markers = "python_version >= \"3.11\""
+files = [
+    {file = "pytest_httpserver-1.2.1-py3-none-any.whl", hash = "sha256:3f440eebbaea9c7b26a4ee83bb331b7d25ade45f849150c040d64f9f15be91a0"},
+    {file = "pytest_httpserver-1.2.1.tar.gz", hash = "sha256:fbad14449e1acfacf24a4d6e2de3211a8654597f03e296af4a833b51836467bc"},
+]
+
+[package.dependencies]
+Werkzeug = ">=3.0.0"
 
 [[package]]
 name = "python-dateutil"
